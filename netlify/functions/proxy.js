@@ -22,8 +22,8 @@ exports.handler = async function(event) {
 'anthropic-beta': 'messages-2023-12-15',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-5',
-        max_tokens: 2000,
+       model: 'claude-sonnet-4-20250514',
+        max_tokens: 1500,
         messages,
       }),
     });
