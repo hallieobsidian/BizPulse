@@ -771,95 +771,32 @@ async function runAnalysis() {
 
   const dataStr = dataLines.length ? dataLines.join('\n') : 'No specific data provided.';
 
-  const prompt = `You are a sharp, experienced business consultant. A business owner has submitted data about their business for analysis. Your job is to give them an honest, specific, genuinely useful assessment — not generic fluff.
+  const prompt = `You are a business analyst. Analyze this business and return ONLY a JSON object.
 
-BUSINESS DATA SUBMITTED:
+BUSINESS DATA:
 ${dataStr}
 
-IMPORTANT RULES:
-- If only a Google link or business name was provided, still give a rich, useful analysis. Infer from the business type, location, and industry what their likely challenges and opportunities are. Make realistic assumptions and state them.
-- If real financial numbers were provided, USE them — calculate profit margin, conversion rate, revenue per customer, gap to goal, etc.
-- Be honest about weaknesses. Owners need truth.
-- Growth opportunities must be SPECIFIC to this type of business, not generic.
-- Competitors should be realistic local alternatives a customer might choose.
-- Actions should feel like they came from a consultant who knows this business, not a chatbot.
-
-Return ONLY valid JSON (no markdown, no explanation):
+Return this exact JSON structure with realistic data specific to this business type:
 {
-  "businessName": "string (use what was provided, or infer)",
-  "industry": "string",
+  "businessName": "string",
+  "industry": "string", 
   "location": "string",
-  "overallScore": number (0-100, be honest),
+  "overallScore": number,
   "scoreColor": "green|amber|red",
-  "scoreSummary": "string (1 sentence honest verdict)",
-  "metrics": [
-    {"label":"string","value":"string","change":"string","changeType":"up|down|neutral"}
-  ],
-  "trafficSources": [
-    {"label":"string","value":number,"color":"hex color"}
-  ],
-  "funnel": [
-    {"label":"string","count":number,"color":"hex color"}
-  ],
-  "dashboardSummary": "string (3-4 sentences, honest and specific)",
-  "auditSections": [
-    {
-      "title":"string",
-      "status":"good|warn|bad",
-      "findings":[
-        {"icon":"emoji","title":"string","detail":"string (2-3 sentences, specific)"}
-      ]
-    }
-  ],
-  "growthIntro": "string (2-3 sentences about where the biggest revenue opportunity is for this specific business)",
-  "opportunities": [
-    {
-      "title":"string",
-      "priority":"high|med|low",
-      "description":"string (specific, 2 sentences)",
-      "potentialRevenue":"string (realistic estimate)",
-      "effort":"string",
-      "timeframe":"string"
-    }
-  ],
-  "actions": [
-    {
-      "title":"string",
-      "detail":"string (specific, actionable)",
-      "priority":"high|med|low",
-      "impact":"string",
-      "effort":"string",
-      "timeframe":"string"
-    }
-  ],
-  "competitors": [
-    {
-      "name":"string",
-      "isYou":true|false,
-      "seoScore":"good|med|bad",
-      "adSpend":"string",
-      "reviews":"string",
-      "convRate":"string",
-      "strength":"string"
-    }
-  ],
-  "competitorInsight":"string (2-3 sentences with a specific strategic angle)"
+  "scoreSummary": "string",
+  "metrics": [{"label":"string","value":"string","change":"string","changeType":"up|down|neutral"}],
+  "trafficSources": [{"label":"string","value":number,"color":"hex"}],
+  "funnel": [{"label":"string","count":number,"color":"hex"}],
+  "dashboardSummary": "string",
+  "auditSections": [{"title":"string","status":"good|warn|bad","findings":[{"icon":"emoji","title":"string","detail":"string"}]}],
+  "growthIntro": "string",
+  "opportunities": [{"title":"string","priority":"high|med|low","description":"string","potentialRevenue":"string","effort":"string","timeframe":"string"}],
+  "actions": [{"title":"string","detail":"string","priority":"high|med|low","impact":"string","effort":"string","timeframe":"string"}],
+  "competitors": [{"name":"string","isYou":true|false,"seoScore":"good|med|bad","adSpend":"string","reviews":"string","convRate":"string","strength":"string"}],
+  "competitorInsight":"string"
 }
 
-Rules:
-- metrics: 4 items. CRITICAL: Use INDUSTRY-SPECIFIC estimates — a tree trimming company has completely different revenue and job sizes than a sandwich shop. Never use the same numbers for different business types.
-- INDUSTRY REVENUE BENCHMARKS (use when no data provided):
-  * Tree trimming/landscaping: avg job $350-800, 8-15 jobs/week, annual revenue $180K-$420K
-  * Sandwich shop/restaurant: avg ticket $12-18, 80-200 covers/day, annual revenue $280K-$650K
-  * HVAC: avg job $800-2400, 4-8 jobs/week, annual revenue $320K-$900K
-  * Dental: avg patient value $800-1200/yr, annual revenue $650K-$1.4M
-  * Use similar industry-specific logic for any other business type
-- trafficSources: 4-5 channels realistic for THIS industry. Restaurants get Yelp/walk-in. Tree trimmers get Google Search/Nextdoor. Never use the same mix for different industries.
-- funnel: 4 stages with industry-appropriate volumes. Sandwich shop = hundreds daily. Tree trimmer = dozens monthly.
-- auditSections: 4 sections — "Online Presence & SEO", "Marketing & Lead Generation", "Sales & Operations", "Financial Health". Always include all 4.
-- opportunities: 4-6 items SPECIFIC to this business type. Sandwich shop = catering contracts, loyalty program. Tree trimmer = storm season prep, HOA contracts.
-- actions: 8 items SPECIFIC to this industry. Tree trimmer needs storm season tips. Sandwich shop needs lunch rush optimization.
-- competitors: 4-5 REALISTIC local competitors for this exact business type. Tree trimmers compete with other tree trimmers only.`;
+Rules: 4 metrics, 4 trafficSources summing to 100, 4 funnel stages, 4 auditSections, 4 opportunities, 6 actions, 4 competitors. Use industry-specific realistic numbers. A restaurant has different revenue than a tree trimmer.`;
 
   let report;
   try {
