@@ -1,2 +1,6 @@
 [build]
   functions = "netlify/functions"
+
+[functions."proxy"]
+  node_bundler = "esbuild"
+  timeout = 30
