@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BizPulse v9 — Know Where You Stand. Know How to Grow.</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f7f4;
+  --surface: #ffffff;
+  --surface2: #f0ede7;
+  --border: rgba(0,0,0,0.07);
+  --border2: rgba(0,0,0,0.13);
+  --text: #181714;
+  --muted: #74726a;
+  --faint: #a8a59c;
+  --accent: #2563eb;
+  --accent-bg: #eff4ff;
+  --green: #16a34a;
+  --green-bg: #f0fdf4;
+  --amber: #b45309;
+  --amber-bg: #fffbeb;
+  --red: #dc2626;
+  --red-bg: #fef2f2;
+  --gold: #92670c;
+  --font-display: 'Instrument Serif', serif;
+  --font-body: 'DM Sans', sans-serif;
+  --r: 14px;
+  --r-sm: 9px;
+  --shadow: 0 1px 12px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.05);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* SCREEN SYSTEM */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ═══════════════════════════════
+   INTAKE SCREEN
+═══════════════════════════════ */
+.intake-wrap {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+@media(max-width:720px) { .intake-wrap { grid-template-columns: 1fr; } }
+
+.intake-left {
+  background: var(--text);
+  color: #fff;
+  padding: 56px 48px;
+  display: flex; flex-direction: column; justify-content: space-between;
+  position: sticky; top: 0; height: 100vh;
+}
+@media(max-width:720px) { .intake-left { height: auto; position: relative; padding: 40px 28px; } }
+
+.intake-logo {
+  font-family: var(--font-display);
+  font-size: 22px; font-style: italic;
+  opacity: 0.95; margin-bottom: 60px;
+}
+.intake-left h1 {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 4vw, 52px);
+  line-height: 1.1; font-weight: 400;
+  margin-bottom: 20px;
+}
+.intake-left h1 em { font-style: italic; color: rgba(255,255,255,0.6); }
+.intake-left p {
+  color: rgba(255,255,255,0.6);
+  font-size: 15px; font-weight: 300;
+  max-width: 340px; line-height: 1.7;
+  margin-bottom: 40px;
+}
+.intake-what {
+  display: flex; flex-direction: column; gap: 10px;
+}
+.intake-what-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  font-size: 13px; color: rgba(255,255,255,0.55);
+}
+.intake-what-item strong { color: rgba(255,255,255,0.85); display: block; font-weight: 500; }
+.iw-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(255,255,255,0.25); flex-shrink: 0; margin-top: 7px;
+}
+
+.intake-right {
+  padding: 48px 40px;
+  overflow-y: auto;
+  max-width: 560px;
+}
+@media(max-width:720px) { .intake-right { padding: 32px 20px; } }
+
+.intake-right h2 {
+  font-family: var(--font-display);
+  font-size: 26px; font-weight: 400;
+  margin-bottom: 6px;
+}
+.intake-right > p { color: var(--muted); font-size: 14px; margin-bottom: 32px; }
+
+/* Input blocks */
+.iblock { margin-bottom: 20px; }
+.iblock-label {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.4px;
+  color: var(--muted); margin-bottom: 8px;
+}
+.iblock-label .req { color: var(--accent); font-size: 14px; line-height: 1; }
+.iblock-label .opt-badge {
+  font-size: 10px; font-weight: 500;
+  background: var(--surface2); color: var(--faint);
+  padding: 1px 7px; border-radius: 99px;
+}
+.iblock-hint { font-size: 12px; color: var(--faint); margin-top: 5px; }
+
+.text-input {
+  width: 100%;
+  border: 1.5px solid var(--border2);
+  border-radius: var(--r-sm); padding: 11px 14px;
+  font-family: var(--font-body); font-size: 14px;
+  color: var(--text); background: var(--surface);
+  outline: none; transition: border-color 0.18s;
+}
+.text-input:focus { border-color: var(--accent); }
+.text-input::placeholder { color: var(--faint); }
+.text-input.filled { border-color: var(--green); }
+
+/* Upload tile */
+.upload-tile {
+  display: flex; align-items: center; gap: 14px;
+  border: 1.5px dashed var(--border2);
+  border-radius: var(--r-sm); padding: 14px 16px;
+  cursor: pointer; transition: all 0.18s;
+  background: var(--surface);
+}
+.upload-tile:hover { border-color: var(--accent); background: var(--accent-bg); }
+.upload-tile.filled { border-style: solid; border-color: var(--green); background: var(--green-bg); }
+.upload-tile input { display: none; }
+.ut-icon { font-size: 20px; flex-shrink: 0; }
+.ut-text { flex: 1; }
+.ut-text strong { display: block; font-size: 13px; font-weight: 600; }
+.ut-text span { font-size: 12px; color: var(--muted); }
+.ut-check { color: var(--green); font-weight: 700; display: none; }
+.upload-tile.filled .ut-check { display: block; }
+.upload-tile.filled .ut-arrow { display: none; }
+.ut-arrow { color: var(--faint); font-size: 14px; }
+
+/* YTD grid */
+.ytd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.ytd-field label { display: block; font-size: 11px; font-weight: 600; color: var(--muted); margin-bottom: 4px; letter-spacing: 0.3px; }
+.ytd-field input {
+  width: 100%; border: 1.5px solid var(--border2); border-radius: var(--r-sm);
+  padding: 9px 12px; font-family: var(--font-body); font-size: 14px;
+  color: var(--text); background: var(--surface); outline: none;
+  transition: border-color 0.18s;
+}
+.ytd-field input:focus { border-color: var(--accent); }
+.ytd-field input::placeholder { color: var(--faint); }
+
+/* Divider */
+.idivider {
+  display: flex; align-items: center; gap: 12px;
+  margin: 24px 0; color: var(--faint); font-size: 12px;
+}
+.idivider::before, .idivider::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+
+/* Submit */
+.submit-btn {
+  width: 100%; padding: 15px;
+  background: var(--text); color: #fff;
+  border: none; border-radius: var(--r-sm);
+  font-family: var(--font-display); font-size: 18px;
+  font-style: italic; cursor: pointer;
+  transition: opacity 0.15s; margin-top: 8px;
+  letter-spacing: -0.2px;
+}
+.submit-btn:hover { opacity: 0.85; }
+.submit-note { font-size: 12px; color: var(--faint); text-align: center; margin-top: 10px; }
+
+/* ═══════════════════════════════
+   LOADING SCREEN
+═══════════════════════════════ */
+#screen-loading {
+  min-height: 100vh; display: none;
+  align-items: center; justify-content: center;
+  flex-direction: column; text-align: center; padding: 40px;
+}
+#screen-loading.active { display: flex; }
+.load-ring {
+  width: 52px; height: 52px; border-radius: 50%;
+  border: 2.5px solid var(--border2);
+  border-top-color: var(--text);
+  animation: spin 0.85s linear infinite;
+  margin: 0 auto 28px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.load-title { font-family: var(--font-display); font-size: 26px; font-weight: 400; margin-bottom: 6px; }
+.load-sub { color: var(--muted); font-size: 14px; margin-bottom: 32px; }
+.load-steps { display: flex; flex-direction: column; gap: 7px; max-width: 300px; margin: 0 auto; }
+.lstep {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13px; color: var(--faint);
+  opacity: 0; animation: fadeUp 0.4s forwards;
+  text-align: left;
+}
+.lstep.done { color: var(--green); }
+.lstep .ldot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+@keyframes fadeUp { from { opacity:0; transform: translateY(6px); } to { opacity:1; transform: translateY(0); } }
+
+/* ═══════════════════════════════
+   REPORT SCREEN
+═══════════════════════════════ */
+#screen-report { background: var(--bg); }
+
+.topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px; height: 58px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 50;
+}
+.tb-logo { font-family: var(--font-display); font-size: 18px; font-style: italic; }
+.tb-right { display: flex; gap: 8px; }
+.tb-btn {
+  padding: 7px 16px; border-radius: var(--r-sm);
+  border: 1.5px solid var(--border2); background: var(--surface);
+  font-family: var(--font-body); font-size: 13px; font-weight: 500;
+  color: var(--muted); cursor: pointer; transition: all 0.15s;
+}
+.tb-btn:hover { border-color: var(--text); color: var(--text); }
+.tb-btn.primary { background: var(--text); color: #fff; border-color: var(--text); }
+.tb-btn.primary:hover { opacity: 0.85; }
+
+.report-body { max-width: 900px; margin: 0 auto; padding: 40px 28px 80px; }
+
+/* Score banner */
+.score-banner {
+  background: var(--surface); border-radius: var(--r);
+  box-shadow: var(--shadow); padding: 28px 32px;
+  display: flex; align-items: center; gap: 28px;
+  margin-bottom: 24px; flex-wrap: wrap;
+}
+.score-circle {
+  width: 80px; height: 80px; border-radius: 50%; flex-shrink: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  border: 3px solid currentColor;
+}
+.score-circle .snum {
+  font-family: var(--font-display); font-size: 26px; font-weight: 400; line-height: 1;
+}
+.score-circle .slbl { font-size: 9px; letter-spacing: 0.5px; color: var(--muted); margin-top: 2px; }
+.score-info { flex: 1; }
+.score-info h2 { font-family: var(--font-display); font-size: 24px; font-weight: 400; margin-bottom: 4px; }
+.score-info p { color: var(--muted); font-size: 14px; }
+.score-info .smeta { font-size: 12px; color: var(--faint); margin-top: 4px; }
+
+/* Tabs */
+.tabs-row {
+  display: flex; gap: 2px; margin-bottom: 24px;
+  background: var(--surface); border-radius: var(--r-sm);
+  padding: 3px; box-shadow: var(--shadow);
+}
+.tab-btn {
+  flex: 1; padding: 8px 10px; border: none; background: none;
+  border-radius: 7px; font-family: var(--font-body); font-size: 13px;
+  font-weight: 500; color: var(--muted); cursor: pointer; transition: all 0.15s;
+  white-space: nowrap;
+}
+.tab-btn.active { background: var(--text); color: #fff; }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; animation: fadeUp 0.3s ease; }
+
+/* Metrics row */
+.metrics-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(165px, 1fr)); gap: 10px; margin-bottom: 20px; }
+.metric-card {
+  background: var(--surface); border-radius: var(--r);
+  box-shadow: var(--shadow); padding: 20px;
+}
+.metric-card .mc-lbl { font-size: 10px; font-weight: 600; letter-spacing: 0.7px; text-transform: uppercase; color: var(--faint); margin-bottom: 8px; }
+.metric-card .mc-val { font-family: var(--font-display); font-size: 28px; font-weight: 400; letter-spacing: -0.5px; margin-bottom: 4px; }
+.metric-card .mc-chg { font-size: 12px; }
+.mc-chg.up { color: var(--green); } .mc-chg.down { color: var(--red); } .mc-chg.neutral { color: var(--faint); }
+
+/* Chart cards */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+@media(max-width:600px) { .two-col { grid-template-columns: 1fr; } }
+.chart-card {
+  background: var(--surface); border-radius: var(--r);
+  box-shadow: var(--shadow); padding: 22px;
+}
+.chart-card h4 { font-size: 10px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; color: var(--faint); margin-bottom: 16px; }
+.bar-row { display: flex; align-items: center; gap: 9px; margin-bottom: 9px; font-size: 12px; }
+.bar-lbl { width: 70px; color: var(--muted); flex-shrink: 0; font-size: 12px; }
+.bar-track { flex: 1; height: 7px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; transition: width 1.2s cubic-bezier(.22,1,.36,1); }
+.bar-val { width: 36px; text-align: right; font-weight: 500; font-size: 12px; color: var(--text); }
+.funnel-row { display: flex; align-items: center; gap: 9px; margin-bottom: 7px; }
+.funnel-lbl { width: 78px; font-size: 12px; color: var(--muted); flex-shrink: 0; }
+.funnel-bar {
+  height: 30px; border-radius: 6px; display: flex; align-items: center;
+  padding: 0 12px; font-size: 12px; font-weight: 600; color: #fff; min-width: 48px;
+}
+
+/* Summary card */
+.summary-card {
+  background: var(--surface); border-radius: var(--r);
+  box-shadow: var(--shadow); padding: 24px; margin-bottom: 16px;
+}
+.summary-card .sc-eyebrow {
+  font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 10px;
+}
+.summary-card p { color: var(--muted); font-size: 14px; line-height: 1.8; }
+
+/* Audit */
+.audit-block { margin-bottom: 22px; }
+.audit-block-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.audit-block-header h3 { font-family: var(--font-display); font-size: 19px; font-weight: 400; }
+.spill {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.6px;
+  padding: 3px 9px; border-radius: 99px;
+}
+.spill.good { background: var(--green-bg); color: var(--green); }
+.spill.warn { background: var(--amber-bg); color: var(--amber); }
+.spill.bad  { background: var(--red-bg); color: var(--red); }
+
+.audit-card {
+  background: var(--surface); border-radius: var(--r);
+  box-shadow: var(--shadow); overflow: hidden;
+}
+.finding {
+  display: flex; gap: 14px; padding: 16px 20px;
+  border-bottom: 1px solid var(--border); align-items: flex-start;
+}
+.finding:last-child { border-bottom: none; }
+.f-icon { font-size: 17px; flex-shrink: 0; margin-top: 1px; }
+.f-text strong { display: block; font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+.f-text span { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+/* Growth opportunities — special treatment */
+.opportunities-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+@media(max-width:600px) { .opportunities-grid { grid-template-columns: 1fr; } }
+.opp-card {
+  background: var(--surface); border-radius: var(--r);
+  box-shadow: var(--shadow); padding: 20px;
+  border-top: 3px solid var(--accent);
+  cursor: pointer; transition: box-shadow 0.15s;
+}
+.opp-card:hover { box-shadow: var(--shadow-lg); }
+.opp-card.high { border-top-color: var(--green); }
+.opp-card.med  { border-top-color: var(--amber); }
+.opp-card.low  { border-top-color: var(--faint); }
+.opp-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+.opp-header strong { font-size: 14px; font-weight: 600; line-height: 1.3; }
+.opp-impact {
+  font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; flex-shrink: 0;
+  white-space: nowrap;
+}
+.opp-impact.high { background: var(--green-bg); color: var(--green); }
+.opp-impact.med  { background: var(--amber-bg); color: var(--amber); }
+.opp-impact.low  { background: var(--surface2); color: var(--faint); }
+.opp-card p { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 12px; }
+.opp-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+.opp-tag { font-size: 11px; padding: 2px 7px; border-radius: 99px; background: var(--surface2); color: var(--muted); }
+
+/* Actions */
+.actions-progress { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.progress-track { flex: 1; height: 5px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--green); border-radius: 3px; transition: width 0.4s ease; }
+.progress-txt { font-size: 12px; color: var(--muted); white-space: nowrap; }
+
+.action-item {
+  background: var(--surface); border-radius: var(--r);
+  box-shadow: var(--shadow); padding: 18px 20px;
+  display: flex; gap: 14px; margin-bottom: 8px;
+  cursor: pointer; transition: opacity 0.2s; align-items: flex-start;
+}
+.action-item.done { opacity: 0.4; }
+.action-num {
+  width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 600; font-size: 13px;
+}
+.action-num.high { background: var(--red-bg); color: var(--red); }
+.action-num.med  { background: var(--amber-bg); color: var(--amber); }
+.action-num.low  { background: var(--green-bg); color: var(--green); }
+.action-body { flex: 1; }
+.action-body strong { display: block; font-weight: 600; margin-bottom: 3px; }
+.action-body p { font-size: 13px; color: var(--muted); }
+.action-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
+.atag { font-size: 11px; padding: 2px 7px; border-radius: 99px; background: var(--surface2); color: var(--muted); }
+.action-check { font-size: 18px; color: var(--faint); margin-top: 2px; }
+.action-item.done .action-check { color: var(--green); }
+
+/* Competitors */
+.comp-wrap {
+  background: var(--surface); border-radius: var(--r);
+  box-shadow: var(--shadow); overflow-x: auto; margin-bottom: 16px;
+}
+.comp-tbl { width: 100%; border-collapse: collapse; min-width: 500px; font-size: 13px; }
+.comp-tbl th {
+  text-align: left; padding: 12px 16px;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.7px;
+  text-transform: uppercase; color: var(--faint);
+  border-bottom: 1px solid var(--border);
+}
+.comp-tbl td { padding: 14px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.comp-tbl tr:last-child td { border-bottom: none; }
+.comp-tbl tr.you-row { background: var(--accent-bg); }
+.you-pill {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.5px;
+  color: var(--accent); background: rgba(37,99,235,0.12);
+  padding: 2px 7px; border-radius: 4px; margin-left: 6px;
+}
+.cpill { display: inline-block; padding: 3px 9px; border-radius: 99px; font-weight: 600; font-size: 12px; }
+.cpill.good { background: var(--green-bg); color: var(--green); }
+.cpill.med  { background: var(--amber-bg); color: var(--amber); }
+.cpill.bad  { background: var(--red-bg); color: var(--red); }
+
+.insight-card {
+  background: var(--surface); border-radius: var(--r);
+  box-shadow: var(--shadow); padding: 24px;
+  border-left: 3px solid var(--gold);
+}
+.insight-card h4 { font-family: var(--font-display); font-size: 17px; font-weight: 400; margin-bottom: 8px; }
+.insight-card p { color: var(--muted); font-size: 14px; line-height: 1.75; }
+
+/* Utility */
+.gap { height: 12px; }
+</style>
+</head>
+<body>
+
+<!-- ═══════ INTAKE SCREEN ═══════ -->
+<div class="screen active" id="screen-intake">
+  <div class="intake-wrap">
+    <div class="intake-left">
+      <div>
+        <div class="intake-logo">BizPulse</div>
+        <h1>Know where<br>you stand.<br><em>Know how<br>to grow.</em></h1>
+        <p>Upload what you have — even just your Google link. Get a real analysis of your business and a clear path to more revenue.</p>
+      </div>
+      <div class="intake-what">
+        <div class="intake-what-item">
+          <div class="iw-dot"></div>
+          <div><strong>Works with whatever you have</strong>Just a Google link? That's enough to start.</div>
+        </div>
+        <div class="intake-what-item">
+          <div class="iw-dot"></div>
+          <div><strong>Honest assessment</strong>Not flattery — real gaps and real opportunities.</div>
+        </div>
+        <div class="intake-what-item">
+          <div class="iw-dot"></div>
+          <div><strong>Specific next steps</strong>Not generic advice. Actions based on your actual situation.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="intake-right">
+      <h2>Tell us about your business</h2>
+      <p>Start with just one field. Add more for deeper insights.</p>
+
+      <!-- Google link — primary -->
+      <div class="iblock">
+        <div class="iblock-label">
+          📍 Google Business Profile URL <span class="req">·</span> <span class="opt-badge">Most valuable</span>
+        </div>
+        <input class="text-input" id="inp-google" type="url" placeholder="https://maps.google.com/?cid=... or search.google.com/..." oninput="markFilled(this)" />
+        <div class="iblock-hint">Find it by searching your business on Google → click your listing → copy the URL from your browser.</div>
+      </div>
+
+      <!-- Website -->
+      <div class="iblock">
+        <div class="iblock-label">🌐 Website URL <span class="opt-badge">Optional</span></div>
+        <input class="text-input" id="inp-website" type="url" placeholder="https://yoursite.com" oninput="markFilled(this)" />
+      </div>
+
+      <!-- Business basics -->
+      <div class="iblock">
+        <div class="iblock-label">🏢 Business Name & Industry</div>
+        <input class="text-input" id="inp-bizname" type="text" placeholder="e.g. Mike's HVAC — Heating & Air Conditioning" style="margin-bottom:8px" oninput="markFilled(this)" />
+        <input class="text-input" id="inp-location" type="text" placeholder="City, State (e.g. Jacksonville, FL)" oninput="markFilled(this)" />
+      </div>
+
+      <div class="idivider">Add more data for deeper analysis</div>
+
+      <!-- YTD numbers -->
+      <div class="iblock">
+        <div class="iblock-label">📈 Year-to-Date Numbers <span class="opt-badge">Optional</span></div>
+        <div class="ytd-grid">
+          <div class="ytd-field"><label>Revenue YTD</label><input type="text" id="ytd-rev" placeholder="$0" /></div>
+          <div class="ytd-field"><label>Expenses YTD</label><input type="text" id="ytd-exp" placeholder="$0" /></div>
+          <div class="ytd-field"><label>New Customers YTD</label><input type="text" id="ytd-cust" placeholder="0" /></div>
+          <div class="ytd-field"><label>Avg Job / Deal Size</label><input type="text" id="ytd-deal" placeholder="$0" /></div>
+          <div class="ytd-field"><label>Leads / Inquiries YTD</label><input type="text" id="ytd-leads" placeholder="0" /></div>
+          <div class="ytd-field"><label>Goal Revenue (Full Year)</label><input type="text" id="ytd-goal" placeholder="$0" /></div>
+        </div>
+      </div>
+
+      <!-- QuickBooks / accounting -->
+      <div class="iblock">
+        <div class="iblock-label">📒 Accounting File (QBO, Xero, CSV) <span class="opt-badge">Optional</span></div>
+        <label class="upload-tile" id="tile-qbo" onclick="document.getElementById('f-qbo').click()">
+          <input type="file" id="f-qbo" accept=".csv,.xlsx,.pdf,.qbo" onchange="fileUploaded('qbo','f-qbo','tile-qbo')">
+          <div class="ut-icon">📒</div>
+          <div class="ut-text">
+            <strong>Upload QuickBooks export or P&L</strong>
+            <span id="fname-qbo">CSV, XLSX, PDF, or .QBO file</span>
+          </div>
+          <div class="ut-check">✓</div>
+          <div class="ut-arrow">↑</div>
+        </label>
+      </div>
+
+      <!-- Ads / marketing -->
+      <div class="iblock">
+        <div class="iblock-label">📣 Ad Campaign Data <span class="opt-badge">Optional</span></div>
+        <label class="upload-tile" id="tile-ads" onclick="document.getElementById('f-ads').click()">
+          <input type="file" id="f-ads" accept=".csv,.xlsx,.pdf" onchange="fileUploaded('ads','f-ads','tile-ads')">
+          <div class="ut-icon">📣</div>
+          <div class="ut-text">
+            <strong>Google Ads, Meta Ads, or any ad platform export</strong>
+            <span id="fname-ads">CSV, XLSX, or PDF</span>
+          </div>
+          <div class="ut-check">✓</div>
+          <div class="ut-arrow">↑</div>
+        </label>
+      </div>
+
+      <!-- Anything else -->
+      <div class="iblock">
+        <div class="iblock-label">💬 Anything else we should know? <span class="opt-badge">Optional</span></div>
+        <textarea class="text-input" id="inp-notes" rows="3" placeholder="e.g. We mostly get jobs from word of mouth. Our busy season is summer. We tried Google Ads last year but stopped — it wasn't working." style="resize:vertical"></textarea>
+      </div>
+
+      <button class="submit-btn" onclick="runAnalysis()">Analyze My Business →</button>
+      <div class="submit-note">Takes about 30 seconds. No account needed.</div>
+      <div style="margin-top:16px;padding:12px 14px;background:var(--surface2);border-radius:var(--r-sm);font-size:12px;color:var(--faint);line-height:1.6;">
+        <strong style="color:var(--muted);font-weight:600;">ℹ️ About this report:</strong> Figures and insights derived directly from your inputs are labeled as such. All other data — including competitor estimates, traffic breakdowns, conversion benchmarks, and financial projections — are AI-generated based on industry research and typical patterns for your business type. They are intended as directional guidance, not verified facts. Always validate key decisions with your own data.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ LOADING SCREEN ═══════ -->
+<div class="screen" id="screen-loading">
+  <div class="load-ring"></div>
+  <div class="load-title">Analyzing your business…</div>
+  <div class="load-sub">This takes about 30 seconds</div>
+  <div class="load-steps" id="load-steps"></div>
+</div>
+
+<!-- ═══════ REPORT SCREEN ═══════ -->
+<div class="screen" id="screen-report">
+  <div class="topbar">
+    <div class="tb-logo">BizPulse</div>
+    <div class="tb-right">
+      <button class="tb-btn" onclick="window.print()">⬇ Export PDF</button>
+      <button class="tb-btn primary" onclick="goBack()">+ New Analysis</button>
+    </div>
+  </div>
+
+  <div class="report-body">
+    <!-- Score banner -->
+    <div class="score-banner">
+      <div class="score-circle" id="score-circle">
+        <div class="snum" id="score-num">—</div>
+        <div class="slbl">/ 100</div>
+      </div>
+      <div class="score-info">
+        <h2 id="report-bizname">Your Business</h2>
+        <p id="report-summary-short"></p>
+        <div class="smeta" id="report-meta"></div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs-row">
+      <button class="tab-btn active" onclick="switchTab('t-dash',this)">📊 Dashboard</button>
+      <button class="tab-btn" onclick="switchTab('t-audit',this)">🔍 Audit</button>
+      <button class="tab-btn" onclick="switchTab('t-growth',this)">🚀 Growth</button>
+      <button class="tab-btn" onclick="switchTab('t-actions',this)">✅ Actions</button>
+      <button class="tab-btn" onclick="switchTab('t-comp',this)">⚔️ Competitors</button>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="tab-panel active" id="t-dash">
+      <div class="metrics-row" id="r-metrics"></div>
+      <div class="two-col">
+        <div class="chart-card"><h4>Traffic / Visibility by Channel</h4><div id="r-traffic"></div></div>
+        <div class="chart-card"><h4>Customer Conversion Funnel</h4><div id="r-funnel"></div></div>
+      </div>
+      <div class="summary-card">
+        <div class="sc-eyebrow">✦ AI Assessment</div>
+        <p id="r-summary"></p>
+      </div>
+    </div>
+
+    <!-- AUDIT -->
+    <div class="tab-panel" id="t-audit">
+      <div id="r-audit"></div>
+    </div>
+
+    <!-- GROWTH OPPORTUNITIES -->
+    <div class="tab-panel" id="t-growth">
+      <div class="summary-card" style="margin-bottom:20px;">
+        <div class="sc-eyebrow">✦ Where Your Next Revenue Is Coming From</div>
+        <p id="r-growth-intro"></p>
+      </div>
+      <div class="opportunities-grid" id="r-opportunities"></div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="tab-panel" id="t-actions">
+      <div class="actions-progress">
+        <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+        <div class="progress-txt" id="prog-txt">0 / 0 complete</div>
+      </div>
+      <div id="r-actions"></div>
+    </div>
+
+    <!-- COMPETITORS -->
+    <div class="tab-panel" id="t-comp">
+      <div class="comp-wrap"><table class="comp-tbl" id="r-comp"></table></div>
+      <div class="gap"></div>
+      <div class="insight-card" id="r-comp-insight"></div>
+      <div style="margin-top:16px;padding:12px 14px;background:var(--surface2);border-radius:var(--r-sm);font-size:12px;color:var(--faint);line-height:1.6;">
+        <strong style="color:var(--muted);font-weight:600;">ℹ️ Competitor data notice:</strong> Competitor names, review counts, ad spend estimates, and conversion rates are AI-generated based on typical market patterns for your business type and location. They are not sourced from live data and should be independently verified via Google, Yelp, or SEMrush before making strategic decisions.
+      </div>
+    </div>
+  </div>
+
+  <div style="max-width:900px;margin:0 auto;padding:0 28px 48px;">
+    <div style="padding:14px 18px;background:var(--surface2);border-radius:var(--r-sm);font-size:12px;color:var(--faint);line-height:1.7;border-top:2px solid var(--border);">
+      <strong style="color:var(--muted);font-weight:600;">ℹ️ About this report:</strong> This analysis combines data you provided with AI-generated estimates based on industry benchmarks and market research for your business type. Metrics, benchmarks, competitor data, and projections not directly sourced from your inputs are illustrative and intended as directional guidance only. Revenue estimates, conversion rates, and growth projections represent typical outcomes — your actual results will vary. Validate key business decisions with your accountant, marketing data, or a qualified advisor.
+    </div>
+  </div>
+</div>
+
+<script>
+let actionsDone = new Set();
+let totalActions = 0;
+let intakeData = {};
+
+function markFilled(el) {
+  if (el.value.trim()) el.classList.add('filled');
+  else el.classList.remove('filled');
+}
+
+function fileUploaded(key, fileId, tileId) {
+  const f = document.getElementById(fileId)?.files[0];
+  if (!f) return;
+  intakeData[key] = f.name;
+  document.getElementById(tileId)?.classList.add('filled');
+  const fn = document.getElementById('fname-' + key);
+  if (fn) fn.textContent = f.name;
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function goBack() {
+  showScreen('screen-intake');
+}
+
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function toggleAction(el) {
+  const id = el.dataset.id;
+  if (actionsDone.has(id)) {
+    actionsDone.delete(id); el.classList.remove('done');
+    el.querySelector('.action-check').textContent = '○';
+  } else {
+    actionsDone.add(id); el.classList.add('done');
+    el.querySelector('.action-check').textContent = '✓';
+  }
+  updateProgress();
+}
+
+function updateProgress() {
+  const pct = totalActions ? Math.round(actionsDone.size / totalActions * 100) : 0;
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-txt').textContent = actionsDone.size + ' / ' + totalActions + ' complete';
+}
+
+async function runAnalysis() {
+  // Gather all input
+  const google   = document.getElementById('inp-google').value.trim();
+  const website  = document.getElementById('inp-website').value.trim();
+  const bizname  = document.getElementById('inp-bizname').value.trim();
+  const location = document.getElementById('inp-location').value.trim();
+  const notes    = document.getElementById('inp-notes').value.trim();
+  const ytd = {
+    rev:   document.getElementById('ytd-rev').value.trim(),
+    exp:   document.getElementById('ytd-exp').value.trim(),
+    cust:  document.getElementById('ytd-cust').value.trim(),
+    deal:  document.getElementById('ytd-deal').value.trim(),
+    leads: document.getElementById('ytd-leads').value.trim(),
+    goal:  document.getElementById('ytd-goal').value.trim(),
+  };
+
+  const hasAny = google || website || bizname || ytd.rev || notes;
+  if (!hasAny) {
+    alert('Please fill in at least one field — even just your Google Business URL or business name.');
+    return;
+  }
+
+  showScreen('screen-loading');
+
+  const steps = [
+    'Reading your business profile…',
+    'Checking online presence & reviews…',
+    'Analyzing local market position…',
+    'Identifying revenue opportunities…',
+    'Researching competitors in your area…',
+    'Building your personalized action plan…',
+  ];
+  const sl = document.getElementById('load-steps');
+  sl.innerHTML = '';
+  steps.forEach((s, i) => {
+    const d = document.createElement('div');
+    d.className = 'lstep';
+    d.id = 'ls' + i;
+    d.style.animationDelay = (i * 0.55) + 's';
+    d.innerHTML = '<div class="ldot"></div>' + s;
+    sl.appendChild(d);
+  });
+  steps.forEach((_, i) => setTimeout(() => {
+    const el = document.getElementById('ls' + i);
+    if (el) el.classList.add('done');
+  }, (i + 1) * 580));
+
+  // Build data description
+  const dataLines = [];
+  if (bizname)  dataLines.push('Business name & type: ' + bizname);
+  if (location) dataLines.push('Location: ' + location);
+  if (google)   dataLines.push('Google Business URL: ' + google);
+  if (website)  dataLines.push('Website: ' + website);
+  if (ytd.rev)  dataLines.push('Revenue YTD: ' + ytd.rev);
+  if (ytd.exp)  dataLines.push('Expenses YTD: ' + ytd.exp);
+  if (ytd.cust) dataLines.push('New customers YTD: ' + ytd.cust);
+  if (ytd.deal) dataLines.push('Avg deal/job size: ' + ytd.deal);
+  if (ytd.leads)dataLines.push('Leads/inquiries YTD: ' + ytd.leads);
+  if (ytd.goal) dataLines.push('Full-year revenue goal: ' + ytd.goal);
+  if (intakeData.qbo)  dataLines.push('Accounting file uploaded: ' + intakeData.qbo);
+  if (intakeData.ads)  dataLines.push('Ad data file uploaded: ' + intakeData.ads);
+  if (notes)    dataLines.push('Owner notes: ' + notes);
+
+  const dataStr = dataLines.length ? dataLines.join('\n') : 'No specific data provided.';
+
+  const prompt = `You are a sharp, experienced business consultant. A business owner has submitted data about their business for analysis. Your job is to give them an honest, specific, genuinely useful assessment — not generic fluff.
+
+BUSINESS DATA SUBMITTED:
+${dataStr}
+
+IMPORTANT RULES:
+- If only a Google link or business name was provided, still give a rich, useful analysis. Infer from the business type, location, and industry what their likely challenges and opportunities are. Make realistic assumptions and state them.
+- If real financial numbers were provided, USE them — calculate profit margin, conversion rate, revenue per customer, gap to goal, etc.
+- Be honest about weaknesses. Owners need truth.
+- Growth opportunities must be SPECIFIC to this type of business, not generic.
+- Competitors should be realistic local alternatives a customer might choose.
+- Actions should feel like they came from a consultant who knows this business, not a chatbot.
+
+Return ONLY valid JSON (no markdown, no explanation):
+{
+  "businessName": "string (use what was provided, or infer)",
+  "industry": "string",
+  "location": "string",
+  "overallScore": number (0-100, be honest),
+  "scoreColor": "green|amber|red",
+  "scoreSummary": "string (1 sentence honest verdict)",
+  "metrics": [
+    {"label":"string","value":"string","change":"string","changeType":"up|down|neutral"}
+  ],
+  "trafficSources": [
+    {"label":"string","value":number,"color":"hex color"}
+  ],
+  "funnel": [
+    {"label":"string","count":number,"color":"hex color"}
+  ],
+  "dashboardSummary": "string (3-4 sentences, honest and specific)",
+  "auditSections": [
+    {
+      "title":"string",
+      "status":"good|warn|bad",
+      "findings":[
+        {"icon":"emoji","title":"string","detail":"string (2-3 sentences, specific)"}
+      ]
+    }
+  ],
+  "growthIntro": "string (2-3 sentences about where the biggest revenue opportunity is for this specific business)",
+  "opportunities": [
+    {
+      "title":"string",
+      "priority":"high|med|low",
+      "description":"string (specific, 2 sentences)",
+      "potentialRevenue":"string (realistic estimate)",
+      "effort":"string",
+      "timeframe":"string"
+    }
+  ],
+  "actions": [
+    {
+      "title":"string",
+      "detail":"string (specific, actionable)",
+      "priority":"high|med|low",
+      "impact":"string",
+      "effort":"string",
+      "timeframe":"string"
+    }
+  ],
+  "competitors": [
+    {
+      "name":"string",
+      "isYou":true|false,
+      "seoScore":"good|med|bad",
+      "adSpend":"string",
+      "reviews":"string",
+      "convRate":"string",
+      "strength":"string"
+    }
+  ],
+  "competitorInsight":"string (2-3 sentences with a specific strategic angle)"
+}
+
+Rules:
+- metrics: 4 items. CRITICAL: Use INDUSTRY-SPECIFIC estimates — a tree trimming company has completely different revenue and job sizes than a sandwich shop. Never use the same numbers for different business types.
+- INDUSTRY REVENUE BENCHMARKS (use when no data provided):
+  * Tree trimming/landscaping: avg job $350-800, 8-15 jobs/week, annual revenue $180K-$420K
+  * Sandwich shop/restaurant: avg ticket $12-18, 80-200 covers/day, annual revenue $280K-$650K
+  * HVAC: avg job $800-2400, 4-8 jobs/week, annual revenue $320K-$900K
+  * Dental: avg patient value $800-1200/yr, annual revenue $650K-$1.4M
+  * Use similar industry-specific logic for any other business type
+- trafficSources: 4-5 channels realistic for THIS industry. Restaurants get Yelp/walk-in. Tree trimmers get Google Search/Nextdoor. Never use the same mix for different industries.
+- funnel: 4 stages with industry-appropriate volumes. Sandwich shop = hundreds daily. Tree trimmer = dozens monthly.
+- auditSections: 4 sections — "Online Presence & SEO", "Marketing & Lead Generation", "Sales & Operations", "Financial Health". Always include all 4.
+- opportunities: 4-6 items SPECIFIC to this business type. Sandwich shop = catering contracts, loyalty program. Tree trimmer = storm season prep, HOA contracts.
+- actions: 8 items SPECIFIC to this industry. Tree trimmer needs storm season tips. Sandwich shop needs lunch rush optimization.
+- competitors: 4-5 REALISTIC local competitors for this exact business type. Tree trimmers compete with other tree trimmers only.`;
+
+  let report;
+  try {
+    const res = await fetch('/.netlify/functions/proxy', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: [{ role: 'user', content: prompt }] })
+    });;
+    const data = await res.json();
+    const raw = data.content.map(c => c.text || '').join('');
+    const clean = raw.replace(/```json|```/g, '').trim();
+    report = JSON.parse(clean);
+  } catch(e) {
+    report = demoReport(bizname || 'Your Business', location);
+  }
+
+  const delay = steps.length * 580 + 300;
+  setTimeout(() => {
+    renderReport(report);
+    showScreen('screen-report');
+  }, delay);
+}
+
+function renderReport(r) {
+  actionsDone = new Set();
+
+  // Score
+  const scoreEl = document.getElementById('score-num');
+  scoreEl.textContent = r.overallScore;
+  const scoreCircle = document.getElementById('score-circle');
+  const col = r.scoreColor === 'green' ? 'var(--green)' : r.scoreColor === 'red' ? 'var(--red)' : 'var(--amber)';
+  scoreCircle.style.color = col;
+  scoreEl.style.color = col;
+
+  document.getElementById('report-bizname').textContent = r.businessName;
+  document.getElementById('report-summary-short').textContent = r.scoreSummary || '';
+  document.getElementById('report-meta').textContent = (r.industry || '') + (r.location ? ' · ' + r.location : '') + ' · Analyzed ' + new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+
+  // Metrics
+  document.getElementById('r-metrics').innerHTML = (r.metrics||[]).map(m => `
+    <div class="metric-card">
+      <div class="mc-lbl">${m.label}</div>
+      <div class="mc-val">${m.value}</div>
+      <div class="mc-chg ${m.changeType}">${m.change}</div>
+    </div>`).join('');
+
+  // Traffic
+  const maxT = Math.max(...(r.trafficSources||[{value:1}]).map(t => t.value));
+  document.getElementById('r-traffic').innerHTML = (r.trafficSources||[]).map(t => `
+    <div class="bar-row">
+      <div class="bar-lbl">${t.label}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.round(t.value/maxT*100)}%;background:${t.color}"></div></div>
+      <div class="bar-val">${t.value}%</div>
+    </div>`).join('');
+
+  // Funnel
+  const maxF = r.funnel && r.funnel[0] ? r.funnel[0].count : 1;
+  document.getElementById('r-funnel').innerHTML = (r.funnel||[]).map(f => `
+    <div class="funnel-row">
+      <div class="funnel-lbl">${f.label}</div>
+      <div class="funnel-bar" style="width:${Math.max(18,Math.round(f.count/maxF*100))}%;background:${f.color}">${f.count.toLocaleString()}</div>
+    </div>`).join('');
+
+  document.getElementById('r-summary').textContent = r.dashboardSummary || '';
+
+  // Audit
+  document.getElementById('r-audit').innerHTML = (r.auditSections||[]).map(s => `
+    <div class="audit-block">
+      <div class="audit-block-header">
+        <h3>${s.title}</h3>
+        <span class="spill ${s.status}">${s.status.toUpperCase()}</span>
+      </div>
+      <div class="audit-card">
+        ${(s.findings||[]).map(f => `
+          <div class="finding">
+            <div class="f-icon">${f.icon}</div>
+            <div class="f-text"><strong>${f.title}</strong><span>${f.detail}</span></div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+
+  // Growth
+  document.getElementById('r-growth-intro').textContent = r.growthIntro || '';
+  document.getElementById('r-opportunities').innerHTML = (r.opportunities||[]).map(o => `
+    <div class="opp-card ${o.priority}">
+      <div class="opp-header">
+        <strong>${o.title}</strong>
+        <span class="opp-impact ${o.priority}">${o.priority.toUpperCase()} IMPACT</span>
+      </div>
+      <p>${o.description}</p>
+      <div class="opp-tags">
+        <span class="opp-tag">💰 ${o.potentialRevenue}</span>
+        <span class="opp-tag">Effort: ${o.effort}</span>
+        <span class="opp-tag">${o.timeframe}</span>
+      </div>
+    </div>`).join('');
+
+  // Actions
+  totalActions = (r.actions||[]).length;
+  document.getElementById('r-actions').innerHTML = (r.actions||[]).map((a,i) => `
+    <div class="action-item" data-id="${i}" onclick="toggleAction(this)">
+      <div class="action-num ${a.priority}">${i+1}</div>
+      <div class="action-body">
+        <strong>${a.title}</strong>
+        <p>${a.detail}</p>
+        <div class="action-tags">
+          <span class="atag">Impact: ${a.impact}</span>
+          <span class="atag">Effort: ${a.effort}</span>
+          <span class="atag">${a.timeframe}</span>
+        </div>
+      </div>
+      <div class="action-check">○</div>
+    </div>`).join('');
+  updateProgress();
+
+  // Competitors
+  document.getElementById('r-comp').innerHTML =
+    `<thead><tr><th>Business</th><th>SEO</th><th>Ad Spend</th><th>Reviews</th><th>Conv. Rate</th><th>Key Strength</th></tr></thead><tbody>` +
+    (r.competitors||[]).map(c => `
+      <tr class="${c.isYou?'you-row':''}">
+        <td>${c.name}${c.isYou?'<span class="you-pill">YOU</span>':''}</td>
+        <td><span class="cpill ${c.seoScore}">${c.seoScore}</span></td>
+        <td>${c.adSpend}</td><td>${c.reviews}</td><td>${c.convRate}</td><td>${c.strength}</td>
+      </tr>`).join('') + '</tbody>';
+
+  document.getElementById('r-comp-insight').innerHTML =
+    `<h4>Your Competitive Position</h4><p>${r.competitorInsight||''}</p>`;
+}
+
+function demoReport(bizName, location) {
+  return {
+    businessName: bizName || 'Your Business',
+    industry: 'Local Service Business',
+    location: location || 'Jacksonville, FL',
+    overallScore: 58,
+    scoreColor: 'amber',
+    scoreSummary: 'Solid foundation, but leaving significant revenue on the table — fixable with focused effort.',
+    metrics: [
+      {label:'Est. Monthly Revenue',value:'$22,400',change:'Based on avg deal size × customers',changeType:'neutral'},
+      {label:'Lead Conversion Rate',value:'28%',change:'Industry avg is 38-45%',changeType:'down'},
+      {label:'Customer Acquisition Cost',value:'$185',change:'Potential to cut by 40%',changeType:'neutral'},
+      {label:'Revenue Gap to Goal',value:'$77,600',change:'Remaining for the year',changeType:'neutral'},
+    ],
+    trafficSources:[
+      {label:'Google',value:42,color:'#2563eb'},
+      {label:'Word of mouth',value:31,color:'#16a34a'},
+      {label:'Direct',value:14,color:'#b45309'},
+      {label:'Social',value:8,color:'#7c3aed'},
+      {label:'Other',value:5,color:'#9ca3af'},
+    ],
+    funnel:[
+      {label:'Visitors',count:1840,color:'#2563eb'},
+      {label:'Inquiries',count:312,color:'#3b82f6'},
+      {label:'Quotes sent',count:164,color:'#60a5fa'},
+      {label:'Closed',count:88,color:'#16a34a'},
+    ],
+    dashboardSummary: 'Your Google presence is your strongest asset — most leads find you there. However, a 28% close rate on inquiries suggests friction in the follow-up process: slow response times or quotes that don\'t address objections. Your word-of-mouth channel is underutilized — customers are happy but you\'re not systematically asking for reviews or referrals, which is the cheapest growth available to you.',
+    auditSections:[
+      {title:'Online Presence & SEO', status:'warn', findings:[
+        {icon:'⚠️',title:'Google profile needs optimization',detail:'Your hours, services, and photos may be incomplete or outdated. Businesses with complete profiles get 7x more clicks. This is free and takes 30 minutes.'},
+        {icon:'🔴',title:'Review response rate is low',detail:'Responding to every review (positive and negative) signals to Google that you\'re active and boosts your local ranking. Most competitors respond; you likely don\'t.'},
+        {icon:'✅',title:'You\'re showing up in local search',detail:'The fact that you appeared in Google results is a good sign. You have a foundation to build on.'},
+      ]},
+      {title:'Marketing & Lead Generation', status:'bad', findings:[
+        {icon:'🔴',title:'No systematic referral program',detail:'Word of mouth is 31% of your business — but it\'s happening by accident. A simple referral incentive ($50 credit, free service) could double this channel in 90 days.'},
+        {icon:'⚠️',title:'Social media is minimal',detail:'You likely have a Facebook page but post infrequently. Before-and-after content performs extremely well for service businesses and builds trust with undecided buyers.'},
+        {icon:'⚠️',title:'No email list or follow-up sequence',detail:'Past customers are your warmest audience. Seasonal check-ins and maintenance reminders drive repeat business and referrals with almost no cost.'},
+      ]},
+      {title:'Sales & Operations', status:'warn', findings:[
+        {icon:'🔴',title:'Response time is likely too slow',detail:'Studies show 78% of customers choose the first business that responds. If you\'re not calling back within 30 minutes during business hours, you\'re losing jobs to competitors.'},
+        {icon:'✅',title:'Average job size shows room to grow',detail:'Upselling and bundling related services at the time of service is the highest-margin growth available. Most service businesses leave 15-25% revenue on the table here.'},
+        {icon:'⚠️',title:'No online booking available',detail:'A significant portion of customers — especially under 40 — prefer to book without calling. Adding an online booking option captures jobs you\'re currently losing.'},
+      ]},
+      {title:'Financial Health', status:'warn', findings:[
+        {icon:'⚠️',title:'Profit margin likely below potential',detail:'Without full accounting data we can\'t be certain, but most local service businesses run 15-25% net margin. If yours is lower, labor cost and pricing are the first places to look.'},
+        {icon:'✅',title:'Revenue base is solid',detail:'Your current revenue level gives you real options — you can invest in marketing, hire, or specialize. You\'re past survival stage.'},
+        {icon:'⚠️',title:'Seasonal cash flow risk',detail:'Service businesses often have feast-or-famine cycles. Building a maintenance contract / recurring revenue base smooths this significantly.'},
+      ]},
+    ],
+    growthIntro: 'Your fastest path to more revenue isn\'t more advertising — it\'s capturing more of the opportunity you\'re already generating. You have good Google visibility and strong word-of-mouth. The gaps are in converting inquiries faster, asking for referrals systematically, and getting repeat business from past customers.',
+    opportunities:[
+      {title:'Speed-to-lead system',priority:'high',description:'Call or text every inquiry within 5 minutes during business hours. This single change can improve your close rate by 30-50% without spending a dollar more on marketing.',potentialRevenue:'+$3,200/mo est.',effort:'Low',timeframe:'This week'},
+      {title:'Referral reward program',priority:'high',description:'Offer past customers a $50 credit or free add-on service for every referral that books. Word of mouth is already 31% of your business — systematizing it can double it.',potentialRevenue:'+$2,800/mo est.',effort:'Low',timeframe:'2 weeks'},
+      {title:'Google review campaign',priority:'high',description:'Text your last 50 customers asking for a Google review with a direct link. Every 10-star increase in review count meaningfully lifts your local search ranking and conversion.',potentialRevenue:'+$1,500/mo est.',effort:'Very Low',timeframe:'This week'},
+      {title:'Service upsell at job time',priority:'med',description:'Train yourself or your team to offer one related add-on at every job. Even a 15% attach rate at $150 average add-on significantly lifts revenue per customer.',potentialRevenue:'+$2,100/mo est.',effort:'Low',timeframe:'2 weeks'},
+      {title:'Maintenance / recurring contracts',priority:'med',description:'Offer an annual maintenance plan for a flat monthly fee. Even 20 customers on a $79/month plan = $1,580/month in predictable, recurring revenue.',potentialRevenue:'+$1,580/mo est.',effort:'Medium',timeframe:'30 days'},
+      {title:'Online booking',priority:'low',description:'Add a simple booking widget (Calendly, ServiceTitan, or Jobber) to your Google profile and website. Captures customers who won\'t call.',potentialRevenue:'+$800/mo est.',effort:'Low',timeframe:'1 week'},
+    ],
+    actions:[
+      {title:'Set up a 5-minute lead response process',detail:'When an inquiry comes in by phone, text, or form — call back within 5 minutes during business hours. Use an auto-text acknowledgment for after hours: "Got your message — we\'ll call you first thing tomorrow at 8am."',priority:'high',impact:'Very High',effort:'Low',timeframe:'Today'},
+      {title:'Ask your last 30 customers for a Google review',detail:'Send a personal text: "Hey [name], really appreciate your business. If you have 60 seconds, a Google review would mean a lot — here\'s the link: [link]." Do this manually before automating it.',priority:'high',impact:'High',effort:'Low',timeframe:'This week'},
+      {title:'Create a referral program and tell every customer',detail:'Decide on a simple incentive ($50 off their next service, or a gift card). Tell every customer at job completion: "If you refer a friend and they book, I\'ll take $50 off your next service."',priority:'high',impact:'High',effort:'Low',timeframe:'This week'},
+      {title:'Complete your Google Business Profile',detail:'Log into your Google Business Profile and fill in: all service categories, service area, complete hours including holidays, 10+ photos of your work, and a full business description with your main keywords.',priority:'high',impact:'High',effort:'Low',timeframe:'This week'},
+      {title:'Start offering one add-on at every job',detail:'Identify your top 2-3 natural add-ons. At every job, after the main work is done: "While I\'m here, I also noticed [X] — want me to take care of that today? It\'d be [price]."',priority:'med',impact:'High',effort:'Low',timeframe:'2 weeks'},
+      {title:'Post 3 before-and-after photos per week',detail:'Take a photo before you start and after you finish every job. Post the pair to Google, Facebook, and Instagram with a short caption. Takes 3 minutes, builds enormous trust with potential customers.',priority:'med',impact:'Medium',effort:'Low',timeframe:'2 weeks'},
+      {title:'Build a simple email/text follow-up list',detail:'Start collecting customer emails and phone numbers if you aren\'t already. Send a check-in message 6 months after service: "Hey [name], just checking in — any [service] needs coming up? Happy to get you on the schedule."',priority:'med',impact:'Medium',effort:'Medium',timeframe:'30 days'},
+      {title:'Price one recurring maintenance plan',detail:'Create a simple annual maintenance agreement. Price it so the customer saves ~10% vs. booking separately. Offer it to every customer after their first job. Start with a goal of 10 customers enrolled.',priority:'low',impact:'Medium',effort:'Medium',timeframe:'30 days'},
+    ],
+    competitors:[
+      {name: bizName || 'Your Business', isYou:true, seoScore:'med',adSpend:'$0–$500/mo',reviews:'< 50 reviews',convRate:'~28%',strength:'Word of mouth'},
+      {name:'Top Local Competitor A',isYou:false,seoScore:'good',adSpend:'$1,500–$3,000/mo',reviews:'150+ @ 4.8★',convRate:'~42%',strength:'Google Ads dominance'},
+      {name:'Top Local Competitor B',isYou:false,seoScore:'med',adSpend:'$500–$1,000/mo',reviews:'80+ @ 4.6★',convRate:'~35%',strength:'Online booking & fast response'},
+      {name:'Budget Competitor',isYou:false,seoScore:'bad',adSpend:'None',reviews:'20 @ 3.8★',convRate:'~20%',strength:'Low price'},
+    ],
+    competitorInsight: 'Your top competitor is winning primarily on Google Ads spend and review volume — not necessarily on service quality. You can close the gap on reviews quickly (it\'s free) and compete effectively before spending on ads. Focus on dominating your reviews and referral game first, then consider ads once your conversion infrastructure is solid — otherwise you\'re paying to send traffic to a leaky bucket.',
+  };
+}
+</script>
+</body>
+</html>
